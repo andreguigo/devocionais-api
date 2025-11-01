@@ -1,9 +1,9 @@
-require('dotenv').config();
+import 'dotenv/config';
 
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const Devotional = require('./models/Devotional');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import Devotional from './models/Devotional.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose
+await mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log('ongoDB connect'))
+  .then(() => console.log('mongoDB connect'))
   .catch(err => console.error('Connect error:', err.message));
 
 app.post('/api', async (req, res) => {
@@ -41,7 +41,11 @@ app.post('/api', async (req, res) => {
 app.get('/api', async (req, res) => {
 	try {
 		const devotionals = await Devotional.find();
-		res.status(200).json({ message: devotionals });
+
+    const randomIndex = Math.floor(Math.random() * devotionals.length);
+		const devotionalDocument = devotionals[randomIndex];
+		
+    res.status(200).json({ message: devotionalDocument });
 	} catch (err) {
 		res.status(500).json({ erro: 'Error', detail: err.message });
 	}
@@ -55,23 +59,24 @@ app.get('/api/src', async (req, res) => {
   }
 
   try {
-		const devotionals = await Devotional.findOne();
-		const themesMap = devotionals?.themes;
+		const devotionals = await Devotional.find();
 
-		const arrayMood = themesMap?.get(theme)?.[0]?.moods?.get(mood);
-
-		if (!Array.isArray(arrayMood) || arrayMood.length === 0) {
-			return res.status(404).json({ message: 'Specified content not found' });
+    const randomIndex = Math.floor(Math.random() * devotionals.length);
+		const devotionalDocument = devotionals[randomIndex];
+    
+		const moodsMapped = devotionalDocument?.themes?.get(theme)?.[0]?.moods?.get(mood);
+    
+		if (!Array.isArray(moodsMapped) || moodsMapped.length === 0) {
+      return res.status(404).json({ message: 'Specified content not found' });
 		}
-
-		const randomIndex = Math.floor(Math.random() * arrayMood.length);
-		const txtMood = arrayMood[randomIndex]?.txt;
-
-		return res.status(200).json({ message: txtMood });
+    
+    const txtMapped = moodsMapped?.map(item => item.txt).toString();
+		return res.status(200).json({ message: txtMapped });
   } catch (err) {
     res.status(500).json({ erro: 'Error when searching for content', detalhe: err.message });
   }
 });
 
-// app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
-module.exports = app;
+app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
+
+export default app;

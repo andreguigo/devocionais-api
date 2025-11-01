@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const TextSchema = new mongoose.Schema({
   txt: String
@@ -20,4 +20,5 @@ const DevotionalSchema = new mongoose.Schema({
 });
 
 const devotional = mongoose.model('Devotional', DevotionalSchema);
-module.exports = devotional;
+
+export default devotional;
