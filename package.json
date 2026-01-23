@@ -1,9 +1,8 @@
 {
-  "name": "devocionaisapi",
-  "version": "1.0.0",
-  "description": "",
+  "name": "apilumina",
+  "version": "2.0.0",
+  "description": "API da aplicação Lumina",
   "main": "app.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
@@ -14,8 +13,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.19.2"
   }
 }

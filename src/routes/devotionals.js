@@ -1,25 +1,13 @@
-import 'dotenv/config';
+require('dotenv').config();
 
-import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import Devotional from './models/Devotional.js';
+const router = require('express').Router();
+const { verifyToken } = require('../middleware/authJwt');
+const Devotional = require('../models/Devotional');
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(cors());
-app.use(express.json());
-
-await mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log('mongoDB connect'))
-  .catch(err => console.error('Connect error:', err.message));
-
-app.post('/api', async (req, res) => {
+router.post('/', [verifyToken], async (req, res) => {
   try {
     const data = req.body;
-
+    
     const themesMap = new Map();
 
     for (const [themeKey, themeValue] of Object.entries(data.themes || {})) {
@@ -33,12 +21,11 @@ app.post('/api', async (req, res) => {
     const news = await Devotional.create({ themes: themesMap });
     res.status(201).json({ message: news });
   } catch (err) {
-    console.error(err);
     res.status(400).json({ erro: 'Error creating content', detalhe: err.message });
   }
 });
 
-app.get('/api', async (req, res) => {
+router.get('/', [verifyToken], async (req, res) => {
 	try {
 		const devotionals = await Devotional.find();
 
@@ -51,7 +38,7 @@ app.get('/api', async (req, res) => {
 	}
 });
 
-app.get('/api/src', async (req, res) => {
+router.get('/src', [verifyToken], async (req, res) => {
   const { theme, mood } = req.query;
 
   if (!theme || !mood) {
@@ -77,6 +64,4 @@ app.get('/api/src', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
-
-export default app;
+module.exports = router;

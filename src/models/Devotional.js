@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const TextSchema = new mongoose.Schema({
   txt: String
@@ -19,6 +19,4 @@ const DevotionalSchema = new mongoose.Schema({
   data: { type: Date, default: Date.now }
 });
 
-const devotional = mongoose.model('Devotional', DevotionalSchema);
-
-export default devotional;
+module.exports = mongoose.model('Devotional', DevotionalSchema);
