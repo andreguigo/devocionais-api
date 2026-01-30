@@ -1,10 +1,9 @@
 require('dotenv').config();
 
 const router = require('express').Router();
-const { verifyToken } = require('../middleware/authJwt');
 const Devotional = require('../models/Devotional');
 
-router.post('/', [verifyToken], async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const data = req.body;
     
@@ -21,24 +20,24 @@ router.post('/', [verifyToken], async (req, res) => {
     const news = await Devotional.create({ themes: themesMap });
     res.status(201).json({ message: news });
   } catch (err) {
-    res.status(400).json({ erro: 'Error creating content', detalhe: err.message });
+    res.status(400).json({ erro: 'Error creating content' });
   }
 });
 
-router.get('/', [verifyToken], async (req, res) => {
+router.get('/', async (req, res) => {
 	try {
 		const devotionals = await Devotional.find();
 
     const randomIndex = Math.floor(Math.random() * devotionals.length);
 		const devotionalDocument = devotionals[randomIndex];
 		
-    res.status(200).json({ message: devotionalDocument });
+    res.status(200).json({ message: devotionalDocument, ip: req.ip });
 	} catch (err) {
-		res.status(500).json({ erro: 'Error', detail: err.message });
+		res.status(500).json({ erro: 'Internal error' });
 	}
 });
 
-router.get('/src', [verifyToken], async (req, res) => {
+router.get('/src', async (req, res) => {
   const { theme, mood } = req.query;
 
   if (!theme || !mood) {
@@ -58,9 +57,9 @@ router.get('/src', [verifyToken], async (req, res) => {
 		}
     
     const txtMapped = moodsMapped?.map(item => item.txt).toString();
-		return res.status(200).json({ message: txtMapped });
+		return res.status(200).json({ message: txtMapped, ip: req.ip });
   } catch (err) {
-    res.status(500).json({ erro: 'Error when searching for content', detalhe: err.message });
+    res.status(500).json({ erro: 'Error when searching for content' });
   }
 });
 
