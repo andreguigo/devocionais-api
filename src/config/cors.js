@@ -24,7 +24,7 @@ const corsOptions = {
     }
 
     return callback(
-      new Error(`CORS locked to origin: ${origin}`),
+      new Error(`CORS bloqueado para origem: ${origin}`),
       false
     )
   },
