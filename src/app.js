@@ -2,13 +2,12 @@ const helmet = require('helmet');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
-const corsOptions = require('./src/config/cors');
+const corsOptions = require('./config/cors');
 
-const connectDB = require('./src/config/mongoose');
-const devotionalsRoute = require('./src/routes/devotionals');
+const connectDB = require('./config/mongoose');
+const devotionalsRoute = require('./routes/devotionals');
 
 const app = express();
-const PORT = process.env.PORT;
 
 connectDB();
 
@@ -29,6 +28,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/api', devotionalsRoute);
 
-app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
+app.use('/', (_, res) => res.json({ message: 'Bem vindo a API de Devocionais' }));
 
 module.exports = app;
