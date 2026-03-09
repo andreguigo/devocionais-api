@@ -55,22 +55,19 @@ Request → Route → Config → MongoDB → Response
 ### Listar todos os devocionais
 
 ```
-GET /
+GET /api/
 ```
-
----
 
 ### Buscar devocional informando os parâmetros theme e mood.
 
 ```
-GET /src
-GET /src?theme=<theme>&mood=<mood>
+GET /api/src?theme=<theme>&mood=<mood>
 ```
 
 Exemplo:
 
 ```
-GET /src?theme=paz&mood=reflexivo
+GET /api/src?theme=paz&mood=reflexivo
 ```
 
 ---
@@ -82,7 +79,7 @@ Exemplo de documento armazenado no MongoDB:
 ```json
 {
   "message": {
-    "_id": "690560824049343cf90536f1",
+    "_id": "...",
     "themes": {
       "amor": [
         {
@@ -92,9 +89,6 @@ Exemplo de documento armazenado no MongoDB:
                 "txt": "Amor em meio à ansiedade..."
               }
             ],
-            "feliz": [
-              ...
-            ]
             ...
           }
           ...
@@ -103,7 +97,8 @@ Exemplo de documento armazenado no MongoDB:
       ...
     }
     ...
-  }
+  },
+  "ip": "::1"
 }
 ```
 
@@ -143,6 +138,9 @@ Esta API implementa algumas boas práticas de segurança:
 ## 📜 Licença
 
 Este projeto está sob a licença **MIT**.
+
+---
+
 ## ✝️ Motivação
 
 Este projeto faz parte de uma iniciativa em construir ferramentas tecnológicas para auxiliar o acesso a conteúdos devocionais personalizados e edificantes.
